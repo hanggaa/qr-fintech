@@ -1,0 +1,45 @@
+{
+  "documents": {
+    "BT/202604/0001": {
+      "documentId": "BT/202604/0001",
+      "invoiceAsal": "INV/202604/0015",
+      "invoiceBaru": "FIN/202604/0001",
+      "merchantId": "T9009",
+      "merchantName": "TB Inti Trio Bhakti Jaya",
+      "kreditur": "PT Distributor Maju Jaya",
+      "krediturId": "CRI-0001",
+      "nominal": 5000000,
+      "rateBunga": "0.25%/minggu",
+      "timestamp": "2026-04-03T10:15:32Z",
+      "hash": "a3f8e2b1c9d4f7a6e8b3c5d1f2a4e6b8c0d2f4a6e8b0c2d4f6a8e0b2c4d6f8",
+      "signature": "304402207b2c4d9f1a8e3b5c7d9f1a3b5c7d9f1a3b5c7d9f1a3b5c7d9f1a3b5c02203k7m9p2r4t6v8x0z2b4d6f8h0j2l4n6p8r0t2v4x6z8b0d2f4h6j8l0n2p4r6",
+      "algorithm": "ECDSA-secp256k1",
+      "hashAlgorithm": "SHA-256",
+      "verificationCode": "BT-VRF-A3F8K9X2",
+      "status": "valid",
+      "createdAt": "2026-04-03T10:15:32Z"
+    },
+    "BT/202604/0002": {
+      "documentId": "BT/202604/0002",
+      "invoiceAsal": "INV/202604/0108",
+      "invoiceBaru": "FIN/202604/0004",
+      "merchantId": "T9009",
+      "merchantName": "TB Inti Trio Bhakti Jaya",
+      "kreditur": "PT Distributor Maju Jaya",
+      "krediturId": "CRI-0001",
+      "nominal": 540000,
+      "rateBunga": "0.25%/minggu",
+      "timestamp": "2026-04-28T14:22:10Z",
+      "hash": "b4c9d3e7f1a5b8c2d6e0f4a8b2c6d0e4f8a2b6c0d4e8f2a6b0c4d8e2f6a0b4",
+      "signature": "3045022100c8d2e6f0a4b8c2d6e0f4a8b2c6d0e4f8a2b6c0d4e8f2a6b0c4d8e2f6a0b402206h8j0l2n4p6r8t0v2x4z6b8d0f2h4j6l8n0p2r4t6v8x0z2b4d6f8h0j2l4n6",
+      "algorithm": "ECDSA-secp256k1",
+      "hashAlgorithm": "SHA-256",
+      "verificationCode": "BT-VRF-B4C9D3E7",
+      "status": "valid",
+      "createdAt": "2026-04-28T14:22:10Z"
+    }
+  },
+  "publicKey": "04a3f8e2b1c9d4f7a6e8b3c5d1f2a4e6b8c0d2f4a6e8b0c2d4f6a8e0b2c4d6f8b4c9d3e7f1a5b8c2d6e0f4a8b2c6d0e4f8a2b6c0d4e8f2a6b0c4d8e2f6a0b4",
+  "issuer": "PT. Mitra Seribu Saudara",
+  "system": "Fintech1000s"
+}

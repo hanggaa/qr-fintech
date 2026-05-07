@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verifikasi Dokumen — Fintech1000s</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+  <div id="app" class="w-full max-w-md">
+    <!-- Loading -->
+    <div id="loading" class="bg-white rounded-3xl shadow-xl p-8 text-center">
+      <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p class="text-sm font-semibold text-slate-700">Memverifikasi dokumen...</p>
+      <p class="text-xs text-slate-400 mt-1">Mengecek hash & signature</p>
+    </div>
+
+    <!-- Result: Valid -->
+    <div id="result-valid" class="bg-white rounded-3xl shadow-xl overflow-hidden hidden">
+      <div class="bg-emerald-500 p-6 text-center">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h1 class="text-xl font-bold text-white">Dokumen Terverifikasi</h1>
+        <p class="text-emerald-100 text-sm mt-1">Data konsisten & signature valid</p>
+      </div>
+      <div class="p-6">
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Document ID</span><span id="v-docId" class="font-mono font-semibold text-slate-800"></span></div>
+          <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Invoice Asal</span><span id="v-invAsal" class="font-mono text-slate-700"></span></div>
+          <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Invoice Baru</span><span id="v-invBaru" class="font-mono text-blue-600 font-semibold"></span></div>
+          <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Merchant</span><span id="v-merchant" class="text-slate-700"></span></div>
+          <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Kreditur</span><span id="v-kreditur" class="text-slate-700"></span></div>
+          <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Nominal</span><span id="v-nominal" class="font-mono font-bold text-slate-800"></span></div>
+          <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Rate Bunga</span><span id="v-rate" class="text-blue-600 font-semibold"></span></div>
+          <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Tanggal</span><span id="v-timestamp" class="text-slate-700"></span></div>
+        </div>
+
+        <div class="mt-5 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+          <p class="text-xs font-bold text-slate-400 uppercase mb-2">Detail Kriptografi</p>
+          <div class="space-y-2 text-xs">
+            <div><span class="text-slate-500">Hash (SHA-256):</span><p id="v-hash" class="font-mono text-slate-600 text-[10px] break-all mt-0.5"></p></div>
+            <div><span class="text-slate-500">Signature (ECDSA):</span><p id="v-sig" class="font-mono text-slate-600 text-[10px] break-all mt-0.5"></p></div>
+            <div class="flex justify-between"><span class="text-slate-500">Algorithm</span><span id="v-algo" class="font-mono text-blue-600"></span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Status</span><span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">✓ Valid</span></div>
+          </div>
+        </div>
+
+        <div class="mt-4 text-center text-xs text-slate-400">
+          <p>Diverifikasi oleh sistem <strong class="text-slate-600">Fintech1000s</strong></p>
+          <p class="mt-0.5">PT. Mitra Seribu Saudara</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result: Invalid -->
+    <div id="result-invalid" class="bg-white rounded-3xl shadow-xl overflow-hidden hidden">
+      <div class="bg-red-500 p-6 text-center">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+        </div>
+        <h1 class="text-xl font-bold text-white">Dokumen Tidak Valid</h1>
+        <p class="text-red-100 text-sm mt-1" id="invalid-reason">Dokumen tidak ditemukan dalam sistem</p>
+      </div>
+      <div class="p-6 text-center">
+        <p class="text-sm text-slate-600">Dokumen ini mungkin telah dimodifikasi atau bukan berasal dari sistem Fintech1000s.</p>
+        <p class="text-xs text-slate-400 mt-3">Jika Anda merasa ini adalah kesalahan, hubungi Admin Fintech1000s.</p>
+      </div>
+    </div>
+
+    <!-- Result: Not Found -->
+    <div id="result-notfound" class="bg-white rounded-3xl shadow-xl overflow-hidden hidden">
+      <div class="bg-amber-500 p-6 text-center">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+        </div>
+        <h1 class="text-xl font-bold text-white">Dokumen Tidak Ditemukan</h1>
+        <p class="text-amber-100 text-sm mt-1">ID dokumen tidak terdaftar di sistem</p>
+      </div>
+      <div class="p-6 text-center">
+        <p class="text-sm text-slate-600">Document ID yang diminta tidak ditemukan dalam database Fintech1000s.</p>
+        <p class="text-xs text-slate-400 mt-3">Pastikan QR Code yang Anda scan berasal dari dokumen Bukti Tempo resmi.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const BASE_URL = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1)
+
+    async function verify() {
+      const params = new URLSearchParams(window.location.search)
+      const docId = params.get('doc')
+
+      if (!docId) {
+        showNotFound()
+        return
+      }
+
+      // Simulate network delay
+      await new Promise(r => setTimeout(r, 1500))
+
+      try {
+        const res = await fetch(BASE_URL + 'data.json')
+        const db = await res.json()
+        const doc = db.documents[docId]
+
+        if (!doc) {
+          showNotFound()
+          return
+        }
+
+        if (doc.status === 'valid') {
+          showValid(doc)
+        } else {
+          showInvalid('Data telah dimodifikasi')
+        }
+      } catch (e) {
+        showInvalid('Gagal mengakses database: ' + e.message)
+      }
+    }
+
+    function showValid(doc) {
+      document.getElementById('loading').classList.add('hidden')
+      document.getElementById('result-valid').classList.remove('hidden')
+
+      document.getElementById('v-docId').textContent = doc.documentId
+      document.getElementById('v-invAsal').textContent = doc.invoiceAsal
+      document.getElementById('v-invBaru').textContent = doc.invoiceBaru
+      document.getElementById('v-merchant').textContent = doc.merchantName + ' (' + doc.merchantId + ')'
+      document.getElementById('v-kreditur').textContent = doc.kreditur + ' (' + doc.krediturId + ')'
+      document.getElementById('v-nominal').textContent = 'Rp ' + doc.nominal.toLocaleString('id-ID')
+      document.getElementById('v-rate').textContent = doc.rateBunga
+      document.getElementById('v-timestamp').textContent = new Date(doc.timestamp).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'medium' })
+      document.getElementById('v-hash').textContent = doc.hash
+      document.getElementById('v-sig').textContent = doc.signature.substring(0, 64) + '...'
+      document.getElementById('v-algo').textContent = doc.algorithm
+    }
+
+    function showInvalid(reason) {
+      document.getElementById('loading').classList.add('hidden')
+      document.getElementById('result-invalid').classList.remove('hidden')
+      document.getElementById('invalid-reason').textContent = reason
+    }
+
+    function showNotFound() {
+      document.getElementById('loading').classList.add('hidden')
+      document.getElementById('result-notfound').classList.remove('hidden')
+    }
+
+    verify()
+  </script>
+</body>
+</html>
